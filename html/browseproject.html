@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Projects - Project Connect</title>
+    <link rel="stylesheet" href="../css/browse-project.css">
+</head>
+<body>
+    <div class="browse-container">
+        <h2>Browse Approved Projects</h2>
+
+        <!-- 🔹 Project Filters -->
+        <label for="filter-category">Category:</label>
+        <select id="filter-category" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="mini-project">Mini Project</option>
+            <option value="main-project">Main Project</option>
+            <option value="research-paper">Research Paper</option>
+            <option value="general-project">General Project</option>
+        </select>
+
+        <label for="filter-department">Department:</label>
+        <select id="filter-department" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="CE">CE</option>
+            <option value="EEE">EEE</option>
+            <option value="ME">ME</option>
+        </select>
+
+        <label for="filter-domain">Domain:</label>
+        <select id="filter-domain" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="web">Web Development</option>
+            <option value="ai-ml">AI/ML</option>
+            <option value="cybersecurity">Cybersecurity</option>
+            <option value="iot">IoT</option>
+            <option value="blockchain">Blockchain</option>
+            <option value="data-science">Data Science</option>
+        </select>
+
+        <label for="filter-year">Batch:</label>
+        <select id="filter-year" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+        </select>
+
+        <!-- 🔹 Project List -->
+        <div class="project-list" id="project-list">
+            <!-- Projects will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        let projects = [];
+
+        // 🔹 Fetch Approved Projects from Backend
+        async function fetchProjects() {
+            try {
+                const response = await fetch("http://localhost:5000/api/projects/approved"); // ✅ Correct API URL
+                if (!response.ok) throw new Error("Failed to fetch projects");
+
+                projects = await response.json();
+                applyFilters(); // Apply filters after fetching
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+                document.getElementById("project-list").innerHTML = "<p style='color: red;'>Error loading projects.</p>";
+            }
+        }
+
+        // 🔹 Apply Filters to Project List
+        function applyFilters() {
+            const categoryFilter = document.getElementById("filter-category").value;
+            const departmentFilter = document.getElementById("filter-department").value;
+            const domainFilter = document.getElementById("filter-domain").value;
+            const yearFilter = document.getElementById("filter-year").value;
+            const projectList = document.getElementById("project-list");
+            projectList.innerHTML = "";
+
+            const filteredProjects = projects.filter(project => 
+                (categoryFilter === "all" || project.category === categoryFilter) &&
+                (departmentFilter === "all" || project.department === departmentFilter) &&
+                (domainFilter === "all" || project.domain === domainFilter) &&
+                (yearFilter === "all" || project.year === yearFilter)
+            );
+
+            if (filteredProjects.length === 0) {
+                projectList.innerHTML = "<p>No projects found.</p>";
+            } else {
+                filteredProjects.forEach(project => {
+                    const projectItem = document.createElement("div");
+                    projectItem.classList.add("project-item");
+                    projectItem.innerHTML = `
+                    <h3>${project.title}</h3>
+                    <p><strong>Category:</strong> ${project.category}</p>
+                    <p><strong>Department:</strong> ${project.department}</p>
+                    <p><strong>Domain:</strong> ${project.domain}</p>
+                    <p><strong>Year:</strong> ${project.year}</p>
+                    <a href="view-project.html?projectId=${project._id}" class="view-btn">View Details</a>
+                `;
+
+                    projectList.appendChild(projectItem);
+                });
+            }
+        }
+
+        // 🔹 Redirect to View Project Page
+        function viewProject(projectId) {
+            window.location.href = `view-project.html?projectId=${projectId}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchProjects);
+    </script>
+</body>
+</html>

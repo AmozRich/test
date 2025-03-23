@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - Project Connect</title>
+    <link rel="stylesheet" href="../css/fac-dash.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Faculty Dashboard</h2>
+
+        <div class="tabs">
+            <button onclick="showSection('pending-projects')">Pending Projects</button>
+            <button onclick="showSection('approved-projects')">Approved Projects</button>
+            <button onclick="showSection('rejected-projects')">Rejected Projects</button>
+            <button onclick="location.href='browseproject.html'">Browse Projects</button> <!-- Redirect to Browse -->
+        </div>
+
+        <div id="pending-projects" class="project-section">
+            <h3>Pending Projects</h3>
+            <div id="pending-projects-list"></div>
+        </div>
+
+        <div id="approved-projects" class="project-section" style="display: none;">
+            <h3>Approved Projects</h3>
+            <div id="approved-projects-list"></div>
+        </div>
+
+        <div id="rejected-projects" class="project-section" style="display: none;">
+            <h3>Rejected Projects</h3>
+            <div id="rejected-projects-list"></div>
+        </div>
+    </div>
+
+    <script>
+        async function loadProjects() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Unauthorized! Please log in.");
+                window.location.href = "f-login.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:5000/api/projects/faculty", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch projects");
+
+                const projects = await response.json();
+
+                // 🔹 Clear previous project lists
+                document.getElementById("pending-projects-list").innerHTML = "";
+                document.getElementById("approved-projects-list").innerHTML = "";
+                document.getElementById("rejected-projects-list").innerHTML = "";
+
+                projects.forEach(proj => renderProject(proj));
+            } catch (error) {
+                console.error("Error loading projects:", error);
+                document.getElementById("pending-projects-list").innerHTML = "<p style='color: red;'>Error loading projects.</p>";
+            }
+        }
+
+        function renderProject(proj) {
+            const projectCard = document.createElement("div");
+            projectCard.className = "project-card";
+            projectCard.innerHTML = `
+                <h4>${proj.title}</h4>
+                <p>${proj.shortDescription}</p>
+                <p><strong>Department:</strong> ${proj.department}</p>
+                <p><strong>Status:</strong> ${proj.status}</p>
+            `;
+
+            if (proj.status === "Pending Faculty Approval") {
+                projectCard.innerHTML += `
+                    <button onclick="approveProject('${proj._id}')">Approve</button>
+                    <button onclick="rejectProject('${proj._id}')">Reject</button>
+                `;
+                document.getElementById("pending-projects-list").appendChild(projectCard);
+            } else if (proj.status === "Pending HOD Approval") {
+                document.getElementById("approved-projects-list").appendChild(projectCard);
+            } else if (proj.status.includes("Rejected")) {
+                projectCard.innerHTML += `<p><strong>Rejection Reason:</strong> ${proj.rejectionReason || "No reason provided."}</p>`;
+                document.getElementById("rejected-projects-list").appendChild(projectCard);
+            }
+        }
+
+        async function approveProject(projectId) {
+            await updateProjectStatus(projectId, "Pending HOD Approval");
+        }
+
+        async function rejectProject(projectId) {
+            const reason = prompt("Enter rejection reason:");
+            if (!reason) return;
+            await updateProjectStatus(projectId, "Rejected by Faculty", reason);
+        }
+
+        async function updateProjectStatus(projectId, status, reason = "") {
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/projects/status/${projectId}`, {
+                    method: "PUT",
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status, rejectionReason: reason })
+                });
+
+                if (!response.ok) throw new Error("Failed to update project status");
+
+                loadProjects(); // Reload projects after updating
+            } catch (error) {
+                console.error("Error updating project status:", error);
+                alert("Failed to update project status.");
+            }
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.project-section').forEach(section => section.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        document.addEventListener("DOMContentLoaded", loadProjects);
+    </script>
+</body>
+</html>

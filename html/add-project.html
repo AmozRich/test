@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project - Project Connect</title>
+    <link rel="stylesheet" href="../css/add-project.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Project</h2>
+        <form id="add-project-form">
+            <label for="project-name">Project Title:</label>
+            <input type="text" id="project-name" required>
+
+            <label for="category">Project Category:</label>
+            <select id="category">
+                <option value="mini-project">Mini Project</option>
+                <option value="main-project">Main Project</option>
+                <option value="research-paper">Research Paper</option>
+            </select>
+
+            <label for="problem">Problem Statement:</label>
+            <textarea id="problem" required></textarea>
+
+            <label for="solution">Solution:</label>
+            <textarea id="solution" required></textarea>
+
+            <label for="department">Department:</label>
+            <select id="department">
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="EEE">EEE</option>
+                <option value="CE">CE</option>
+            </select>
+
+            <label for="domain">Project Domain:</label>
+            <select id="domain">
+                <option value="web">Web Development</option>
+                <option value="ai-ml">AI/ML</option>
+                <option value="cybersecurity">Cybersecurity</option>
+                <option value="iot">IoT</option>
+            </select>
+
+            <label for="short-description">Short Description:</label>
+            <textarea id="short-description" required></textarea>
+
+            <label for="long-description">Long Description:</label>
+            <textarea id="long-description" required></textarea>
+
+            <label for="github-repo">GitHub Repository (optional):</label>
+            <input type="text" id="github-repo">
+
+            <button type="submit">Submit Project</button>
+        </form>
+    </div>
+
+    <script>
+    document.getElementById("add-project-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    
+    console.log("🟢 [DEBUG] Form submission triggered.");
+
+    try {
+        // Retrieve token from localStorage
+        const token = localStorage.getItem("token");
+        console.log("🟢 [DEBUG] Retrieved Token:", token);
+
+        if (!token) {
+            console.log("🔴 [ERROR] Unauthorized: No token found.");
+            alert("Unauthorized! Please log in.");
+            window.location.href = "s-login.html";
+            return;
+        }
+
+        // Collect form data
+        const projectData = {
+            title: document.getElementById("project-name").value,
+            category: document.getElementById("category").value,
+            problemStatement: document.getElementById("problem").value,
+            solution: document.getElementById("solution").value,
+            department: document.getElementById("department").value,
+            domain: document.getElementById("domain").value,
+            shortDescription: document.getElementById("short-description").value,
+            longDescription: document.getElementById("long-description").value,
+            githubRepo: document.getElementById("github-repo").value || null, // Set to null if empty
+            status: "Pending Faculty Approval"
+        };
+
+        console.log("🟢 [DEBUG] Collected Project Data:", projectData);
+
+        try {
+            console.log("🔵 [INFO] Sending POST request to backend...");
+            
+            const response = await fetch("http://localhost:5000/api/projects/add-project", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(projectData)
+            });
+
+            console.log("🟢 [DEBUG] Response received, status:", response.status);
+
+            let data;
+            try {
+                data = await response.json();
+                console.log("🟢 [DEBUG] Parsed JSON Response:", data);
+            } catch (jsonError) {
+                console.error("🔴 [ERROR] Failed to parse JSON response:", jsonError);
+                alert("Unexpected server response format.");
+                return;
+            }
+
+            if (response.ok) {
+                alert("Project submitted successfully!");
+                console.log("✅ [SUCCESS] Project submission successful.");
+                window.location.href = "stu-dash.html";
+            } else {
+                console.log("🔴 [ERROR] Server responded with an error:", data.message);
+                alert(`Error: ${data.message}`);
+            }
+
+        } catch (fetchError) {
+            console.error("🔴 [ERROR] Fetch request failed:", fetchError);
+            alert("Network or server error! Try again later.");
+        }
+
+    } catch (generalError) {
+        console.error("🔴 [ERROR] Unexpected error in form submission:", generalError);
+        alert("Something went wrong. Please refresh the page and try again.");
+    }
+});
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Project Connect</title>
+    <link rel="stylesheet" href="../css/stu-dash.css">
+</head>
+<body>
+    <div claass="dashboard-container">
+        <h2>Student Dashboard</h2>
+
+        <button onclick="location.href='add-project.html'" class="add-project-btn">+ Add Project</button>
+
+        <div class="tabs">
+            <button onclick="showSection('your-projects')">Your Projects</button>
+            <button onclick="location.href='browseproject.html'">Browse Projects</button>
+        </div>
+
+        <div id="your-projects" class="project-section">
+            <h3>Your Projects</h3>
+            <div id="your-projects-list">
+                <!-- Student's projects will be inserted here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+async function loadProjects() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Unauthorized! Please log in.");
+        window.location.href = "s-login.html";
+        return;
+    }else{
+        console.log(token,'FROM LOCAL')
+    }
+
+    console.log("Token:", token); // Debug token
+
+    const yourProjectsList = document.getElementById("your-projects-list");
+    yourProjectsList.innerHTML = "<p>Loading...</p>";
+
+    try {
+        const response = await fetch("http://localhost:5000/api/projects/student", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        console.log("Response Status:", response.status); // Debug status
+        if (!response.ok) throw new Error(`Failed to fetch projects: ${response.statusText}`);
+
+        const projects = await response.json();
+        console.log("Projects:", projects); // Debug fetched data
+
+        yourProjectsList.innerHTML = "";
+
+        if (!projects.length) {
+            yourProjectsList.innerHTML = `<p>No projects yet. Click "Add Project" to start.</p>`;
+            return;
+        }
+
+        projects.forEach(proj => {
+            const projectCard = document.createElement('div');
+            projectCard.className = 'project-card';
+            projectCard.innerHTML = `
+                <h4>${proj.title}</h4>
+                <p>${proj.shortDescription || "No description provided."}</p>
+                <span>${proj.status}</span>
+            `;
+            yourProjectsList.appendChild(projectCard);
+        });
+
+    } catch (error) {
+        console.error("Error loading projects:", error);
+        yourProjectsList.innerHTML = `<p style="color:red;">Error loading projects.</p>`;
+    }
+}
+
+
+    function editProject(projectId) {
+        window.location.href = `add-project.html?edit=${projectId}`;
+    }
+
+    async function deleteProject(projectId) {
+        if (confirm("Are you sure you want to delete this project?")) {
+            const token = localStorage.getItem("token");
+            try {
+                const response = await fetch(`http://localhost:5000/api/projects/${projectId}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error("Failed to delete project");
+
+                alert("Project deleted.");
+                loadProjects(); // Reload projects list
+            } catch (error) {
+                alert("Failed to delete project.");
+                console.error("Delete error:", error);
+            }
+        }
+    }
+
+    function showSection(sectionId) {
+        document.querySelectorAll('.project-section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    document.addEventListener("DOMContentLoaded", loadProjects);
+    </script>
+</body>
+</html>
