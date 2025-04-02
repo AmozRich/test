@@ -1,0 +1,291 @@
+/* Base styles and resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Dashboard container */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+h2 {
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+
+h3 {
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    font-size: 1.4rem;
+}
+
+/* Add Project Button */
+.add-project-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background-color: #38a169;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-project-btn:hover {
+    background-color: #2f855a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #edf2f7;
+    padding-bottom: 1rem;
+}
+
+.tabs button {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabs button:hover {
+    background-color: #2c5282;
+    transform: translateY(-2px);
+}
+
+.tabs button.active {
+    background-color: #2b6cb0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Project sections */
+.project-section {
+    margin-top: 1rem;
+}
+
+/* Projects list */
+#your-projects-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Project card */
+.project-card {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #edf2f7;
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.project-card-header {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f4f8;
+    background-color: #f8fafc;
+}
+
+.project-card-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.project-card-body {
+    padding: 1rem;
+}
+
+.project-card-body p {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.project-type {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: #e6fffa;
+    color: #2c7a7b;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.project-type.mini-project {
+    background-color: #e6fffa;
+    color: #2c7a7b;
+}
+
+.project-type.main-project {
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+}
+
+.project-type.research-paper {
+    background-color: #faf5ff;
+    color: #6b46c1;
+}
+
+.project-type.general-project {
+    background-color: #f0fff4;
+    color: #2f855a;
+}
+
+.project-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.project-status.pending {
+    background-color: #FEFCBF;
+    color: #B7791F;
+}
+
+.project-status.approved {
+    background-color: #C6F6D5;
+    color: #2F855A;
+}
+
+.project-status.rejected {
+    background-color: #FED7D7;
+    color: #C53030;
+}
+
+.project-status.in-progress {
+    background-color: #BEE3F8;
+    color: #2B6CB0;
+}
+
+.project-card-footer {
+    padding: 1rem;
+    border-top: 1px solid #f0f4f8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8fafc;
+}
+
+.project-card-footer .guide {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.project-card-footer .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.project-card-footer .actions button {
+    background-color: #3182ce;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.project-card-footer .actions button:hover {
+    background-color: #2c5282;
+}
+
+.project-card-footer .actions button.delete {
+    background-color: #e53e3e;
+}
+
+.project-card-footer .actions button.delete:hover {
+    background-color: #c53030;
+}
+
+.department-tag {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: #edf2f7;
+    color: #4a5568;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #718096;
+}
+
+.empty-state p {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    
+    #your-projects-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .add-project-btn {
+        position: static;
+        display: block;
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+}

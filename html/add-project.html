@@ -1,0 +1,177 @@
+<!-- 3/html/add-project.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project - Project Connect</title>
+    <link rel="stylesheet" href="../css/add-project.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add New Project</h2>
+        <form id="add-project-form">
+            <label for="project-name">Project Title:</label>
+            <input type="text" id="project-name" required>
+
+            <label for="category">Project Category:</label>
+            <select id="category" required>
+                <option value="mini-project">Mini Project</option>
+                <option value="main-project">Main Project</option>
+                <option value="research-paper">Research Paper</option>
+            </select>
+
+            <label for="problem">Problem Statement:</label>
+            <textarea id="problem" required class="full-width"></textarea>
+
+            <label for="solution">Solution:</label>
+            <textarea id="solution" required class="full-width"></textarea>
+
+            <label for="department">Department:</label>
+            <select id="department" required>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="EEE">EEE</option>
+                <option value="CE">CE</option>
+            </select>
+
+            <label for="batch">Batch year:</label>
+            <select id="batch" required>
+                <option value="">-- Select batch --</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+            </select>
+
+            <label for="domain">Project Domain:</label>
+            <select id="domain" required>
+                <option value="web">Web Development</option>
+                <option value="ai-ml">AI/ML</option>
+                <option value="cybersecurity">Cybersecurity</option>
+                <option value="iot">IoT</option>
+            </select>
+
+            <label for="guide">Select Guide:</label>
+            <select id="guide" required>
+                <option value="">-- Select a Faculty Guide --</option>
+                <!-- Options populated dynamically -->
+            </select>
+
+            <label for="short-description">Short Description:</label>
+            <textarea id="short-description" required class="full-width"></textarea>
+
+            <label for="long-description">Long Description:</label>
+            <textarea id="long-description" required class="full-width"></textarea>
+
+            <label for="methodology">Methodology:</label>
+            <textarea id="methodology" required class="full-width"></textarea>
+
+            <label for="result">Result:</label>
+            <textarea id="result" required class="full-width"></textarea>
+
+            <label for="github-repo">GitHub Repository (optional):</label>
+            <input type="url" id="github-repo">
+
+            <div class="submit-container">
+                <button type="submit">Submit Project</button>
+            </div>
+        </form>
+        <a href="stu-dash.html" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <script>
+        // Fetch faculty list on page load
+        async function loadFacultyList() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please log in to submit a project.');
+                window.location.href = 'home.html'; // Updated to index.html
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/faculty/list', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch faculty list');
+
+                const facultyList = await response.json();
+                const guideSelect = document.getElementById('guide');
+
+                facultyList.forEach(faculty => {
+                    const option = document.createElement('option');
+                    option.value = faculty._id; // Assuming faculty has an _id field
+                    option.textContent = faculty.facultyNumber;
+
+                    console.log(faculty);
+                    if(faculty.name){
+                        console.log("FACLTYU")
+                    }else{
+                        console.log("NO")
+                    }
+                    guideSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching faculty list:', error);
+                alert('Failed to load faculty list. Please try again.');
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('add-project-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please log in to submit a project.');
+                window.location.href = 'home.html'; // Updated to index.html
+                return;
+            }
+
+            const projectData = {
+                title: document.getElementById('project-name').value,
+                category: document.getElementById('category').value,
+                problemStatement: document.getElementById('problem').value,
+                solution: document.getElementById('solution').value,
+                department: document.getElementById('department').value,
+                domain: document.getElementById('domain').value,
+                batch: document.getElementById('batch').value,
+                guideId: document.getElementById('guide').value, // Added guideId
+                shortDescription: document.getElementById('short-description').value,
+                longDescription: document.getElementById('long-description').value,
+                methodology: document.getElementById('methodology').value,
+                result: document.getElementById('result').value,
+                githubRepo: document.getElementById('github-repo').value || null
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/projects/add-project', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(projectData)
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Project submitted successfully!');
+                    window.location.href = 'stu-dash.html';
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Failed to submit project. Please check your connection and try again.');
+            }
+        });
+
+        // Load faculty list when the page loads
+        document.addEventListener('DOMContentLoaded', loadFacultyList);
+    </script>
+</body>
+</html>

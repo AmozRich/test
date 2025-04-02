@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - Project Connect</title>
+    <link rel="stylesheet" href="../css/s-login.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>👨‍🎓 Student Login</h2>
+        <form id="student-login-form">
+            <label for="admission-number">Admission Number</label>
+            <input type="text" id="admission-number" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <input type="checkbox" id="toggle-password"> Show Password
+
+            <button type="submit">Login</button>
+        </form>
+        <p id="error-message" style="color: red; display: none;"></p>
+        <a href="home.html" class="back-link">← Back to home</a>
+    </div>
+
+    <script>
+        document.getElementById("student-login-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const admissionNumber = document.getElementById("admission-number").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const errorMessage = document.getElementById("error-message");
+
+        if (!admissionNumber || !password) {
+            errorMessage.textContent = "Please enter all fields.";
+            errorMessage.style.display = "block";
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ admissionNumber, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role);
+                window.location.href = "stu-dash.html";
+            } else {
+                errorMessage.textContent = data.message;
+                errorMessage.style.display = "block";
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
+            errorMessage.textContent = "Server error. Try again later.";
+            errorMessage.style.display = "block";
+        }
+    });
+        document.getElementById("toggle-password").addEventListener("change", function() {
+            const passwordField = document.getElementById("password");
+            passwordField.type = this.checked ? "text" : "password";
+        });
+    </script>
+</body>
+</html>

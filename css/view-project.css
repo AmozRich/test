@@ -1,0 +1,141 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.project-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+    font-size: 28px;
+}
+
+/* Project details styling */
+.project-container p {
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #555;
+}
+
+.project-container p strong {
+    color: #2c3e50;
+    font-weight: 600;
+    display: inline-block;
+    width: 150px;
+    font-size: 16px;
+}
+
+.project-container p#project-long-desc,
+.project-container p#project-problem,
+.project-container p#project-solution,
+.project-container p#project-methodology,
+.project-container p#project-result {
+    padding-left: 15px;
+    border-left: 3px solid #f0f0f0;
+    margin: 10px 0 25px 0;
+    color: #555;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* Link styling */
+.project-container a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.project-container a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Back button styling */
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 15px;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: #e3e3e3;
+    color: #2980b9;
+    text-decoration: none;
+}
+
+/* GitHub link styling */
+#project-github {
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#project-github:hover {
+    background-color: #24292e;
+    text-decoration: none;
+}
+
+/* Status indicator */
+#project-status {
+    font-weight: 500;
+}
+
+/* Section separators */
+.project-container p:nth-of-type(6),
+.project-container p:nth-of-type(8),
+.project-container p:nth-of-type(10),
+.project-container p:nth-of-type(12) {
+    margin-top: 20px;
+    padding-top: 5px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .project-container {
+        padding: 20px;
+    }
+    
+    .project-container p strong {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .project-container p#project-long-desc,
+    .project-container p#project-problem,
+    .project-container p#project-solution,
+    .project-container p#project-methodology,
+    .project-container p#project-result {
+        margin-left: 0;
+    }
+}

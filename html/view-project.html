@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Project - Project Connect</title>
+    <link rel="stylesheet" href="../css/view-project.css">
+</head>
+<body>
+    <div class="project-container">
+        <h2 id="project-title">Project Title</h2>
+        <p><strong>Category:</strong> <span id="project-category"></span></p>
+        <p><strong>Department:</strong> <span id="project-department"></span></p>
+        <p><strong>Domain:</strong> <span id="project-domain"></span></p>
+        <p><strong>Status:</strong> <span id="project-status"></span></p>
+        <p><strong>Short Description:</strong> <span id="project-short-desc"></span></p>
+        <p><strong>Long Description:</strong></p>
+        <p id="project-long-desc"></p>
+        <p><strong>Problem Statement:</strong></p>
+        <p id="project-problem"></p>
+        <p><strong>Solution:</strong></p>
+        <p id="project-solution"></p>
+        <p><strong>Methodology:</strong></p>
+        <p id="project-methodology"></p>
+        <p><strong>Result:</strong></p>
+        <p id="project-result"></p>
+        <p><strong>Guide:</strong> <span id="project-guide"></span></p>
+        <p><strong>GitHub Repo:</strong> <a id="project-github" target="_blank">View on GitHub</a></p>
+        
+        <a href="browseproject.html" class="back-link">← Back to Browse Projects</a>
+    </div>
+
+    <script>
+        async function loadProject() {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get("projectId");
+
+            if (!projectId) {
+                alert("No project selected.");
+                window.location.href = "browseproject.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/projects/${projectId}`);
+                if (!response.ok) throw new Error("Project not found");
+
+                const project = await response.json();
+
+                document.getElementById("project-title").textContent = project.title;
+                document.getElementById("project-category").textContent = project.category;
+                document.getElementById("project-department").textContent = project.department;
+                document.getElementById("project-domain").textContent = project.domain;
+                document.getElementById("project-status").textContent = project.status;
+                document.getElementById("project-guide").textContent =
+    project.guideId?.name || project.guideId?.facultyNumber || "TBD";
+                document.getElementById("project-short-desc").textContent = project.shortDescription;
+                document.getElementById("project-long-desc").textContent = project.longDescription;
+                document.getElementById("project-problem").textContent = project.problemStatement;
+                document.getElementById("project-solution").textContent = project.solution;
+                document.getElementById("project-methodology").textContent = project.methodology;
+                document.getElementById("project-result").textContent = project.result;
+                document.getElementById("project-github").href = project.githubRepo || "#";
+                document.getElementById("project-github").textContent = project.githubRepo ? "View on GitHub" : "No Repository";
+            } catch (error) {
+                console.error("Error loading project:", error);
+                alert("Failed to load project.");
+                window.location.href = "browseproject.html";
+            }
+        }
+
+
+        document.addEventListener("DOMContentLoaded", loadProject);
+    </script>
+</body>
+</html>
