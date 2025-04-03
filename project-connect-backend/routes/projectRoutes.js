@@ -145,7 +145,7 @@ router.put("/status/:projectId", authenticateToken, checkRole(["faculty", "hod"]
 // Get All Approved Projects
 router.get("/approved", async (req, res) => {
     try {
-        const projects = await Project.find({ status: "Approved" });
+        const projects = await Project.find({ status: "Approved" }).populate("guideId", "name facultyNumber");
         res.json(projects);
     } catch (error) {
         console.error("Error fetching approved projects:", error);
@@ -153,14 +153,33 @@ router.get("/approved", async (req, res) => {
     }
 });
 
-// ✅ IMPORTANT: Keep this route at the END
+// Delete Project
+router.delete("/:id", authenticateToken, async (req, res) => {
+    try {
+       const projectId = req.params.id;
+       const studentId = req.user.id;
+       const projectToDelete = await Project.findOneAndDelete({ _id: projectId, studentId: studentId });
+       if (!projectToDelete) {
+           return res.status(404).json({ message: "Project not found or you don't have permission to delete it." });
+       }
+       res.status(200).json({ message: "Project deleted successfully!" });
+   } catch (error) {
+       console.error("Error deleting project:", error);
+       if (error.name === 'CastError') {
+           return res.status(400).json({ message: "Invalid project ID format." });
+       }
+       res.status(500).json({ message: "Internal Server Error during project deletion." });
+   }
+});
+
+
 router.get("/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
         const project = await Project.findById(id)
-        .populate("guideId", "name facultyNumber") // ✅ fetch guide info
-        .populate("studentId", "name admissionNumber"); // optional: fetch student info too
+        .populate("guideId", "name facultyNumber")
+        .populate("studentId", "name admissionNumber");
         if (!project) return res.status(404).json({ message: "Project not found" });
         res.json(project);
     } catch (error) {

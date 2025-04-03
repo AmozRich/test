@@ -10,7 +10,8 @@
     <div class="dashboard-container">
         <h2>Student Dashboard</h2>
         <button class="add-project-btn" onclick="window.location.href='add-project.html'">Add New Project</button>
-        <button class="add-project-btn" onclick="location.href='browseproject.html'" class="btn btn-primary">Browse Projects</button>
+        <button class="browse-project-btn" onclick="location.href='browseproject.html'">Browse Projects</button>
+        <button class="delete-project-btn" onclick="location.href='browseproject.html'">Delete Projects</button>
 
         <div class="tabs">
             <button class="active" onclick="showTab('your-projects')">Your Projects</button>
@@ -59,9 +60,7 @@
                             <span class="project-status ${project.status.toLowerCase().replace(/\s/g, '-')}">${project.status}</span>
                         </div>
                         <div class="project-card-footer">
-                            <span class="guide">
-    Guide: ${project.guideId?.name || project.guideId?.facultyNumber || "TBD"}
-</span>
+                            
                             <div class="actions">
                                 <button onclick="viewProject('${project._id}')">View</button>
                                 <button class="delete" onclick="deleteProject('${project._id}')">Delete</button>

@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const projectRoutes = require("./routes/projectRoutes");
 const { authenticateToken } = require("./middleware/authMiddleware");
-
+const User = require("./models/User");
 const app = express();
 
 // Middleware
@@ -24,15 +24,6 @@ mongoose.connect(process.env.MONGO_URI, {
 })
     .then(() => console.log("✅ Connected to MongoDB Atlas"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
-
-// User Schema & Model (Should ideally be in models/User.js, but included here as per original)
-const UserSchema = new mongoose.Schema({
-    admissionNumber: { type: String, unique: true, sparse: true }, // For students
-    facultyNumber: { type: String, unique: true, sparse: true },   // For faculty
-    password: { type: String, required: true },
-    role: { type: String, required: true, enum: ["student", "faculty", "hod"] }
-});
-const User = mongoose.model("User", UserSchema);
 
 // Register Route
 app.post("/api/register", async (req, res) => {
@@ -110,7 +101,7 @@ app.use("/api/projects", projectRoutes);
 // Faculty List Route
 app.get("/api/faculty/list", async (req, res) => {
     try {
-        const facultyList = await User.find({ role: "faculty" }).select("_id facultyNumber");
+        const facultyList = await User.find({ role: "faculty" }).select("_id facultyNumber name");
         res.json(facultyList);
     } catch (error) {
         console.error("Error fetching faculty list:", error);

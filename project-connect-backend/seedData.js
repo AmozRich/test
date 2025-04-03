@@ -24,10 +24,9 @@ const predefinedUsers = [
     { facultyNumber: "FAC002", name: "Prof Shilpa", password: "fac002", role: "faculty" },
     { facultyNumber: "HOD001", name: "Dr. Ushus Maria", password: "hod001", role: "hod" }
 ];
-  
 
-// ✅ Predefined Projects
-const predefinedProjects = [
+
+const predefinedProjects = [ 
     {
         title: "Smart Traffic System",
         category: "mini-project",
@@ -35,26 +34,30 @@ const predefinedProjects = [
         solution: "A smart AI-based traffic control system.",
         department: "CSE",
         domain: "AI",
+        batch:"2024",
         shortDescription: "An AI-powered smart traffic management system.",
         longDescription: "Using AI and IoT sensors, this system predicts and manages traffic dynamically.",
         methodology: "Machine learning-based traffic pattern recognition.",
         result: "Reduced traffic congestion in simulations.",
         status: "Pending Faculty Approval",
-        studentAdmissionNumber: "5746"
+        studentAdmissionNumber: "5746",
+        // We will add guideFacultyNumber later
     },
     {
-        title: "Smart Traffic System",
+        title: "AI Project Planning Tool", 
         category: "mini-project",
-        problemStatement: "Optimize traffic flow using AI.",
-        solution: "A smart AI-based traffic control system.",
+        problemStatement: "Streamline AI project planning.",
+        solution: "A web tool for AI project steps.",
         department: "CSE",
         domain: "AI",
-        shortDescription: "An AI-powered smart traffic management system.",
-        longDescription: "Using AI and IoT sensors, this system predicts and manages traffic dynamically.",
-        methodology: "Machine learning-based traffic pattern recognition.",
-        result: "Reduced traffic congestion in simulations.",
+        batch:"2025",
+        shortDescription: "A tool to assist in AI project lifecycle.",
+        longDescription: "This web application helps students and faculty plan AI projects effectively.",
+        methodology: "Web development frameworks.",
+        result: "Improved project planning efficiency.",
         status: "Approved",
         studentAdmissionNumber: "5746",
+        guideFacultyNumber: "FAC001" // Assign Guide by Number initially
     },
     {
         title: "IoT-Based Smart Farming",
@@ -63,12 +66,14 @@ const predefinedProjects = [
         solution: "A smart irrigation and crop monitoring system.",
         department: "ECE",
         domain: "IoT",
+        batch:"2023",
         shortDescription: "An IoT-based system to optimize farming efficiency.",
         longDescription: "This project uses IoT sensors to monitor soil moisture and automate irrigation.",
         methodology: "IoT sensors + cloud computing.",
         result: "Improved water efficiency in farming.",
         status: "Pending HOD Approval",
-        studentAdmissionNumber: "5747"
+        studentAdmissionNumber: "5747",
+        guideFacultyNumber: "FAC002" // Assign Guide by Number initially
     }
 ];
 

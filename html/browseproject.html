@@ -17,7 +17,7 @@
             <option value="mini-project">Mini Project</option>
             <option value="main-project">Main Project</option>
             <option value="research-paper">Research Paper</option>
-            <option value="general-project">General Project</option>
+            <!--<option value="general-project">General Project</option>-->
         </select>
 
         <label for="filter-department">Department:</label>
@@ -50,7 +50,7 @@
             <option value="2022">2022</option>
         </select>
 
-        <!-- 🔹 Project List -->
+        <!--  Project List -->
         <div class="project-list" id="project-list">
             <!-- Projects will be inserted here dynamically -->
         </div>
@@ -86,7 +86,7 @@
                 (categoryFilter === "all" || project.category === categoryFilter) &&
                 (departmentFilter === "all" || project.department === departmentFilter) &&
                 (domainFilter === "all" || project.domain === domainFilter) &&
-                (yearFilter === "all" || project.year === yearFilter)
+                (yearFilter === "all" || project.batch === yearFilter)
             );
 
             if (filteredProjects.length === 0) {
@@ -100,10 +100,11 @@
                     <p><strong>Category:</strong> ${project.category}</p>
                     <p><strong>Department:</strong> ${project.department}</p>
                     <p><strong>Domain:</strong> ${project.domain}</p>
-                    <p><strong>Year:</strong> ${project.year}</p>
+                    <p><strong>Year:</strong> ${project.batch}</p>
+
                     <a href="view-project.html?projectId=${project._id}" class="view-btn">View Details</a>
                 `;
-
+                    //   <p><strong>Guide:</strong> ${project.guideId?.name || project.guideId?.facultyNumber || "TBD"}
                     projectList.appendChild(projectItem);
                 });
             }
